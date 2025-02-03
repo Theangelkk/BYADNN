@@ -1,0 +1,69 @@
+defaults:
+  logger: null
+  model: BYADNN
+
+seed: 0                                             # Automatically set everywhere the seed
+gpu_default: 0
+
+#### Limit values Directive 2008/50/EC ########################################################
+dict_limit_air_pollutants:
+  NO2: 18.0                                         # NO2 limit value 1 hour: 18.0 ug/m3
+  CO: 10.0                                          # CO limit value for daily max 8 hours: 10.0 mg/m3
+  CO_ug_m3: ${dict_limit_air_pollutants.CO} * 1000  # Limit CO in ug/m3
+  SO2: 350.0                                        # SO2 limit value for 1 hour: 350.0 ug/m3
+  O3: 120.0                                         # O3 limit value for daily max 8 hours: 120.0 ug/m3
+  PM2.5: 15.0                                       # PM2.5 limit value for 1 year: 25.0 ug/m3
+  PM10: 50.0                                        # PM10 limit value for 1 year: 50.0 ug/m3
+
+#### Dataset information ########################################################
+dataset_info:
+  path_dir_datasets: "EEA"                          # Define the local path of directory where are contained all datasets
+  gp_method: true
+  air_poll_selected: "NO2"
+  freq_mode: "hour"
+  start_year: 2020
+  end_year: 2020
+  type_station: "all"
+  n_stations: -1
+  co_in_ug_m3: false
+  round_prediction: "first_round"
+  remove_imp_target_training: true
+  org_data: false
+  standardization_data: false
+
+#### Model information ########################################################
+model: 
+  input_features: 1
+  num_enc_block: 1
+  embedding_dim: 50
+  num_heads: 1
+  h_enc_layer: 5
+  dropout: 0.0
+  add_positional_encoding: true
+  add_temporal_embedding: false
+  sigma_layer: true
+  h1: 100
+  h2: 30
+
+#### Experiment information ########################################################
+experiment:
+  name_exp: "config_1"
+  optimizer: "Adam"
+  lr: 1e-4
+  betas: [0.95, 0.999]
+  weight_decay: 0.1
+  lr_scheduler: "CosineAnnealingLR"
+  steps_per_epoch: 100
+  milestones: [-1]
+  warmup: 50
+  guide: "AutoDelta"
+  batch_size: 1024                      # -1: it will use as batch size the dimension of training set
+  n_bins: 10
+  num_epochs: 3001
+  eval_epoch: 100
+  num_samples_pred: 100
+  type_prediction: "mean"
+  delta_conf_inter: 0.05
+  confidence_level: 0.95
+  n_segments: 10
+
